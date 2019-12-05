@@ -11,9 +11,6 @@ window.addEventListener("load", function(){
       } else if (isNaN(fuelLevel.value) || isNaN(cargoMass.value)) {
          alert("Fuel Level and Cargo Mass must be numbers.");
          event.preventDefault();
-      } else if (typeof pilotName.value !== "string" || typeof copilotName.value !== "string"){
-         alert("I don't even know how you did that");
-         event.preventDefault();
       } else {
          let faultyItems = document.getElementById("faultyItems");
          let pilotStatus = document.getElementById("pilotStatus");
@@ -50,18 +47,30 @@ window.addEventListener("load", function(){
       }
       event.preventDefault();
    })
-   // fetch("").then(function(response){
-   // });
+   fetch("https://handlers.education.launchcode.org/static/planets.json").then(function(response){
+      response.json().then(function(json){
+         let missionTarget = document.getElementById("missionTarget");
+         //let r = Math.floor((Math.random()*json.length));
+         let destination = document.getElementById("destination");
+         for(i=0;i< json.length;i++){
+            destination.innerHTML += `<option value="${i}">${json[i].name}</option>`
+         }
+         destination.addEventListener("change",function(event){
+            let r = destination.value;
+            missionTarget.innerHTML =`
+            <h2>Mission Destination</h2>
+            <ol>
+               <li>Name: ${json[r].name}</li>
+               <li>Diameter: ${json[r].diameter}</li>
+               <li>Star: ${json[r].star}</li>
+               <li>Distance from Earth: ${json[r].distance}</li>
+               <li>Number of Moons: ${json[r].moons}</li>
+            </ol>
+            <img src="${json[r].image}">
+            `
+         });
+      });
+   });
 });
 
-/* This block of code shows how to format the HTML once you fetch some planetary JSON!
-<h2>Mission Destination</h2>
-<ol>
-   <li>Name: ${}</li>
-   <li>Diameter: ${}</li>
-   <li>Star: ${}</li>
-   <li>Distance from Earth: ${}</li>
-   <li>Number of Moons: ${}</li>
-</ol>
-<img src="${}">
-*/
+
